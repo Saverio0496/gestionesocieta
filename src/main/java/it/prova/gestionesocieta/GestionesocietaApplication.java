@@ -24,6 +24,7 @@ public class GestionesocietaApplication implements CommandLineRunner {
 
 		batteriaDiTestService.testInserisciNuovoMunicipio();
 		batteriaDiTestService.testFindByExampleSocieta();
+		batteriaDiTestService.testInserisciNuovoDipendente();
 
 		System.out.println("################ FINE   #################");
 	}

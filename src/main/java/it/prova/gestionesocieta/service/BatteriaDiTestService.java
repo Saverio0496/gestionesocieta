@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.prova.gestionesocieta.model.Dipendente;
 import it.prova.gestionesocieta.model.Societa;
 
 @Service
@@ -45,6 +46,30 @@ public class BatteriaDiTestService {
 		if (societaTrovate.size() < 1)
 			throw new RuntimeException("Non ci sono società con questi parametri!");
 		System.out.println("Fine test findByExampleSocieta!");
+	}
+
+	public void testInserisciNuovoDipendente() throws Exception {
+		System.out.println("Inizio testInserisciNuovoDipendente");
+
+		Long nowInMillisecondi = new Date().getTime();
+
+		Societa SocietaPerTestInserimentoDipendente = new Societa("Unieuro" + nowInMillisecondi,
+				"Via Roma, 20" + nowInMillisecondi, new SimpleDateFormat("dd-MM-yyyy").parse("08-01-2012"));
+		if (SocietaPerTestInserimentoDipendente.getId() != null)
+			throw new RuntimeException("testInserisciNuovaSocieta...failed: transient object con id valorizzato");
+
+		societaService.inserisciNuovo(SocietaPerTestInserimentoDipendente);
+		if (SocietaPerTestInserimentoDipendente.getId() == null || SocietaPerTestInserimentoDipendente.getId() < 1)
+			throw new RuntimeException("testInserisciNuovaSocieta...failed: inserimento fallito");
+
+		Dipendente dipendenteDaInserire = new Dipendente("Cristian" + nowInMillisecondi, "Casino" + nowInMillisecondi,
+				new SimpleDateFormat("dd-MM-yyyy").parse("10-07-2000"), 54000);
+		dipendenteDaInserire.setSocieta(SocietaPerTestInserimentoDipendente);
+		dipendenteService.inserisciNuovo(dipendenteDaInserire);
+		if (dipendenteDaInserire.getId() == null && dipendenteDaInserire.getId() < 1)
+			throw new RuntimeException("testInserisciNuovoDipendente... failed: inserimento dipendente fallito");
+
+		System.out.println("Fine testInserisciNuovoDipendente!");
 	}
 
 }
