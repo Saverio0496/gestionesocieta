@@ -50,7 +50,7 @@ public class DipendenteServiceImpl implements DipendenteService {
 	}
 
 	@Override
-	public List<Dipendente> cercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel() {
+	public Dipendente cercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel() {
 		return dipendenteRepository.findTheOldestDipendenteWithSocietaBornBefore();
 	}
 

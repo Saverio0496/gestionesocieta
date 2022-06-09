@@ -141,11 +141,13 @@ public class BatteriaDiTestService {
 		Societa nuovaSocietaPerTestReddito = new Societa("Coca Cola" + nowInMillisecondi,
 				"Via Francia, 5" + nowInMillisecondi, new SimpleDateFormat("dd-MM-yyyy").parse("11-09-1930"));
 		if (nuovaSocietaPerTestReddito.getId() != null)
-			throw new RuntimeException("testInserisciNuovaSocieta...failed: transient object con id valorizzato");
+			throw new RuntimeException(
+					"testCercaSocietaConDipendentiConRedditoAnnuoLordoAlmenoDi...failed: transient object con id valorizzato");
 		// salvo
 		societaService.inserisciNuovo(nuovaSocietaPerTestReddito);
 		if (nuovaSocietaPerTestReddito.getId() == null || nuovaSocietaPerTestReddito.getId() < 1)
-			throw new RuntimeException("testInserisciNuovaSocieta...failed: inserimento fallito");
+			throw new RuntimeException(
+					"testCercaSocietaConDipendentiConRedditoAnnuoLordoAlmenoDi...failed: inserimento fallito");
 
 		Societa nuovaSocietaPerTestReddito2 = new Societa("Fanta" + nowInMillisecondi,
 				"Via Parigi, 5" + nowInMillisecondi, new SimpleDateFormat("dd-MM-yyyy").parse("11-08-1970"));
@@ -181,6 +183,38 @@ public class BatteriaDiTestService {
 		if (elencoSocietaTrovate.size() < 1)
 			throw new RuntimeException("Non ci sono società con dipendenti con almeno 30000 di reddito annuo lordo!");
 		System.out.println("Fine test testCercaSocietaConDipendentiConRedditoAnnuoLordoAlmenoDi!");
+
+	}
+
+	public void testCercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel() throws Exception {
+		System.out.println("Inizio testCercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel");
+		Long nowInMillisecondi = new Date().getTime();
+
+		Societa nuovaSocietaPerTestPiuAnziano = new Societa("Divella" + nowInMillisecondi,
+				"Via Roma, 20" + nowInMillisecondi, new SimpleDateFormat("dd-MM-yyyy").parse("01-01-1600"));
+		if (nuovaSocietaPerTestPiuAnziano.getId() != null)
+			throw new RuntimeException(
+					"testCercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel...failed: transient object con id valorizzato");
+
+		societaService.inserisciNuovo(nuovaSocietaPerTestPiuAnziano);
+		if (nuovaSocietaPerTestPiuAnziano.getId() == null || nuovaSocietaPerTestPiuAnziano.getId() < 1)
+			throw new RuntimeException(
+					"testCercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel...failed: inserimento fallito");
+
+		Dipendente dipendente = new Dipendente("Luca" + nowInMillisecondi, "Percassi " + nowInMillisecondi,
+				new SimpleDateFormat("dd-MM-yyyy").parse("24-05-1950"), 54000);
+
+		dipendente.setSocieta(nuovaSocietaPerTestPiuAnziano);
+		dipendenteService.inserisciNuovo(dipendente);
+
+		if (dipendente.getId() == null && dipendente.getId() < 1)
+			throw new RuntimeException(
+					"testCercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel... failed: inserimento dipendente fallito");
+
+		Dipendente dipendentePiuAnziano = dipendenteService.cercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel();
+
+		System.out.println(dipendentePiuAnziano);
+		System.out.println("Fine test testCercaIlDipendentePiuAnzianoDelleSocietaFondatePrimaDel!");
 
 	}
 
