@@ -16,13 +16,14 @@ public class GestionesocietaApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		SpringApplication.run(GestionesocietaApplication.class, args);
 	}
-	
+
 	@Override
 	public void run(String... args) throws Exception {
 
 		System.out.println("################ eseguo i test  #################");
 
 		batteriaDiTestService.testInserisciNuovoMunicipio();
+		batteriaDiTestService.testFindByExampleSocieta();
 
 		System.out.println("################ FINE   #################");
 	}
