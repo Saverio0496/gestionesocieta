@@ -1,6 +1,5 @@
 package it.prova.gestionesocieta.service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -70,6 +69,40 @@ public class BatteriaDiTestService {
 			throw new RuntimeException("testInserisciNuovoDipendente... failed: inserimento dipendente fallito");
 
 		System.out.println("Fine testInserisciNuovoDipendente!");
+	}
+
+	public void testRimuoviSocietaConEccezione() throws Exception {
+		System.out.println("Inizio testRimuoviSocietaConEccezione");
+
+		Long nowInMillisecondi = new Date().getTime();
+
+		Societa SocietaDaEliminare = new Societa("Trust" + nowInMillisecondi, "Via Firenze, 21" + nowInMillisecondi,
+				new SimpleDateFormat("dd-MM-yyyy").parse("09-23-2012"));
+		if (SocietaDaEliminare.getId() != null)
+			throw new RuntimeException(
+					"testRimozioneSocietaVaiInRollback...failed: transient object con id valorizzato");
+
+		societaService.inserisciNuovo(SocietaDaEliminare);
+		if (SocietaDaEliminare.getId() == null || SocietaDaEliminare.getId() < 1)
+			throw new RuntimeException("testRimozioneSocietaVaiInRollback...failed");
+		try {
+			societaService.removeConEccezione(SocietaDaEliminare);
+			throw new RuntimeException("testRemoveConEccezioneVaInRollback...failed: eccezione non lanciata");
+		} catch (Exception e) {
+			// se passo di qui è tutto ok
+		}
+
+		if (SocietaDaEliminare == null || SocietaDaEliminare.getId() == null)
+			throw new RuntimeException(
+					"testRimozioneSocietaVaiInRollback...failed: cancellazione avvenuta senza rollback");
+
+		societaService.rimuovi(SocietaDaEliminare);
+
+		if (SocietaDaEliminare.getDipendenti().size() != 0)
+			throw new RuntimeException(
+					"testRimozioneSocietaVaiInRollback...failed. Impossibile rimuovere: la societa ha dipendenti assegnati");
+
+		System.out.println("Fine testRimuoviSocietaConEccezione!");
 	}
 
 }
