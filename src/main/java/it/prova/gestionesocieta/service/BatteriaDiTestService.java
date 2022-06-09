@@ -105,4 +105,32 @@ public class BatteriaDiTestService {
 		System.out.println("Fine testRimuoviSocietaConEccezione!");
 	}
 
+	public void testModificaDipendente() throws Exception {
+
+		System.out.println("Inizio testModificaDipendente");
+		Long nowInMillisecondi = new Date().getTime();
+
+		Societa nuovaSocietaPerTestModificaDipendente = new Societa("Lete" + nowInMillisecondi,
+				"Via Lione, 57" + nowInMillisecondi, new SimpleDateFormat("dd-MM-yyyy").parse("09-07-1916"));
+		if (nuovaSocietaPerTestModificaDipendente.getId() != null)
+			throw new RuntimeException("testInserisciNuovaSocieta...failed: transient object con id valorizzato");
+		// salvo
+		societaService.inserisciNuovo(nuovaSocietaPerTestModificaDipendente);
+		if (nuovaSocietaPerTestModificaDipendente.getId() == null || nuovaSocietaPerTestModificaDipendente.getId() < 1)
+			throw new RuntimeException("testInserisciNuovaSocieta...failed: inserimento fallito");
+
+		Dipendente dipendenteDaModificare = new Dipendente("Cristian" + nowInMillisecondi, "Casino" + nowInMillisecondi,
+				new SimpleDateFormat("dd-MM-yyyy").parse("10-07-2000"), 54000);
+		dipendenteDaModificare.setSocieta(nuovaSocietaPerTestModificaDipendente);
+		dipendenteService.inserisciNuovo(dipendenteDaModificare);
+		if (dipendenteDaModificare.getId() == null && dipendenteDaModificare.getId() < 1)
+			throw new RuntimeException("testInserisciNuovoDipendente... failed: inserimento dipendente fallito");
+		System.out.println(dipendenteDaModificare.toString());
+		dipendenteDaModificare.setCognome("Marcelli");
+		dipendenteService.aggiorna(dipendenteDaModificare);
+		System.out.println(dipendenteDaModificare.toString());
+		System.out.println("Fine testModificaDipendente!");
+
+	}
+
 }
